@@ -147,7 +147,13 @@ class SudokuTable {
     private void selectNumberLayoutOnClickNumberButtonListener(View view) {
         Button button = (Button) view;
         int preNumber = onClickedButton.get();
-        onClickedButton.set(Integer.parseInt((String) button.getText()));
+        int newNumber = Integer.parseInt((String) button.getText());
+        if (preNumber == newNumber) {
+            selectNumberLayoutOnClickCancelButtonListener(view);
+            return;
+        }
+
+        onClickedButton.set(newNumber);
         onClickedButton.initConflict();
         updateNumber(onClickedButton, preNumber);
 
