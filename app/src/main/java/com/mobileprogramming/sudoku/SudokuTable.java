@@ -2,7 +2,6 @@ package com.mobileprogramming.sudoku;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -32,16 +31,15 @@ class SudokuTable {
 
     private Context context;
     private TableLayout sudokuTable;
-    private TableLayout selectNumberLayout;
-    private FrameLayout backGround;
     private List<List<CustomButton>> buttons;
-    private CustomButton onClickedButton = null;
+
+    private InputNumberTable inputNumberTable;
 
     SudokuTable(Context context, TableLayout sudokuTable, TableLayout selectNumberLayout, FrameLayout backGround) {
         this.context = context;
         this.sudokuTable = sudokuTable;
-        this.selectNumberLayout = selectNumberLayout;
-        this.backGround = backGround;
+
+        inputNumberTable = new InputNumberTable(this, selectNumberLayout, backGround);
 
         initView();
     }
@@ -65,7 +63,8 @@ class SudokuTable {
     private void initView() {
         List<TableRow> tableRows = addTableRows(9);
         buttons = addButtons(tableRows);
-        initSelectNumberLayout();
+
+        inputNumberTable.init();
     }
 
     private List<TableRow> addTableRows(int size) {
@@ -107,6 +106,7 @@ class SudokuTable {
                 buttons.get(i).add(button);
                 tableRows.get(i).addView(buttons.get(i).get(j));
             }
+
             if (i % 3 == 0)
                 tableRows.get(i).setLayoutParams(tableLayoutTopBiggerParams);
             else if ((i + 1) % 3 == 0)
@@ -118,62 +118,7 @@ class SudokuTable {
         return buttons;
     }
 
-    private void initSelectNumberLayout() {
-        selectNumberLayout.findViewById(R.id.number_1)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_2)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_3)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_4)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_5)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_6)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_7)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_8)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-        selectNumberLayout.findViewById(R.id.number_9)
-                .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
-
-        selectNumberLayout.findViewById(R.id.delete_button)
-                .setOnClickListener(this::selectNumberLayoutOnClickDeleteButtonListener);
-        selectNumberLayout.findViewById(R.id.cancel_button)
-                .setOnClickListener(this::selectNumberLayoutOnClickCancelButtonListener);
-    }
-
-    private void selectNumberLayoutOnClickNumberButtonListener(View view) {
-        Button button = (Button) view;
-        int preNumber = onClickedButton.get();
-        int newNumber = Integer.parseInt((String) button.getText());
-        if (preNumber == newNumber) {
-            selectNumberLayoutOnClickCancelButtonListener(view);
-            return;
-        }
-
-        onClickedButton.set(newNumber);
-        onClickedButton.initConflict();
-        updateNumber(onClickedButton, preNumber);
-
-        initSelect();
-    }
-
-    private void selectNumberLayoutOnClickDeleteButtonListener(View view) {
-        int preNumber = onClickedButton.get();
-        onClickedButton.set(0);
-        updateNumber(onClickedButton, preNumber);
-        onClickedButton.initConflict();
-
-        initSelect();
-    }
-
-    private void selectNumberLayoutOnClickCancelButtonListener(View view) {
-        initSelect();
-    }
-
-    private void updateNumber(CustomButton button, int preNumber) {
+    void updateNumber(CustomButton button, int preNumber) {
         updateConflict(button, preNumber);
 
         if (isSolve()) {
@@ -230,26 +175,17 @@ class SudokuTable {
     private boolean isSolve() {
         final int size = buttons.size();
 
-        for (int i = 0; i < size; ++i) {
-            for (int j = 0; j < size; ++j) {
+        for (int i = 0; i < size; ++i)
+            for (int j = 0; j < size; ++j)
                 if (get(i, j).isConflict() || get(i, j).get() == 0)
                     return false;
-            }
-        }
 
         return true;
     }
 
     void init() {
-        initSelect();
+        inputNumberTable.init();
         initNumber();
-    }
-
-    private void initSelect() {
-        backGround.setVisibility(View.INVISIBLE);
-        selectNumberLayout.setVisibility(View.INVISIBLE);
-        int selectedNumber = 0;
-        onClickedButton = null;
     }
 
     private void initNumber() {
@@ -284,8 +220,6 @@ class SudokuTable {
         if (clickedButton.isLock())
             return;
 
-        onClickedButton = clickedButton;
-        backGround.setVisibility(View.VISIBLE);
-        selectNumberLayout.setVisibility(View.VISIBLE);
+        inputNumberTable.setVisibly(clickedButton);
     }
 }
