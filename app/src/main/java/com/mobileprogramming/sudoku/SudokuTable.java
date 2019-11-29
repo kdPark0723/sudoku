@@ -29,21 +29,6 @@ class SudokuTable {
         buttonLayoutRightBiggerParams.setMargins(1, 1, 4, 1);
     }
 
-    private Context context;
-    private TableLayout sudokuTable;
-    private List<List<CustomButton>> buttons;
-
-    private InputNumberTable inputNumberTable;
-
-    SudokuTable(Context context, TableLayout sudokuTable, TableLayout selectNumberLayout, FrameLayout backGround) {
-        this.context = context;
-        this.sudokuTable = sudokuTable;
-
-        inputNumberTable = new InputNumberTable(this, selectNumberLayout, backGround);
-
-        initView();
-    }
-
     private static TableLayout.LayoutParams createTableLayoutLayoutParams() {
         return new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
@@ -58,6 +43,21 @@ class SudokuTable {
                 TableRow.LayoutParams.MATCH_PARENT,
                 1.0f
         );
+    }
+
+    private Context context;
+    private TableLayout sudokuTable;
+    private List<List<CustomButton>> buttons;
+
+    private InputNumberTable inputNumberTable;
+
+    SudokuTable(Context context, TableLayout sudokuTable, TableLayout selectNumberLayout, FrameLayout backGround) {
+        this.context = context;
+        this.sudokuTable = sudokuTable;
+
+        inputNumberTable = new InputNumberTable(this, selectNumberLayout, backGround);
+
+        initView();
     }
 
     private void initView() {
@@ -172,6 +172,14 @@ class SudokuTable {
         }
     }
 
+    private void buttonOnClickListener(View view) {
+        CustomButton clickedButton = (CustomButton) view;
+        if (clickedButton.isLock())
+            return;
+
+        inputNumberTable.setVisibly(clickedButton);
+    }
+
     private boolean isSolve() {
         final int size = buttons.size();
 
@@ -213,13 +221,5 @@ class SudokuTable {
 
     private CustomButton get(int i, int j) {
         return buttons.get(i).get(j);
-    }
-
-    private void buttonOnClickListener(View view) {
-        CustomButton clickedButton = (CustomButton) view;
-        if (clickedButton.isLock())
-            return;
-
-        inputNumberTable.setVisibly(clickedButton);
     }
 }

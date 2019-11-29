@@ -51,6 +51,7 @@ class InputNumberTable {
         Button button = (Button) view;
         int preNumber = onClickedButton.get();
         int newNumber = Integer.parseInt((String) button.getText());
+
         if (preNumber == newNumber) {
             selectNumberLayoutOnClickCancelButtonListener(view);
             return;
@@ -65,6 +66,7 @@ class InputNumberTable {
 
     private void selectNumberLayoutOnClickDeleteButtonListener(View view) {
         int preNumber = onClickedButton.get();
+
         onClickedButton.set(0);
         sudokuTable.updateNumber(onClickedButton, preNumber);
         onClickedButton.initConflict();
