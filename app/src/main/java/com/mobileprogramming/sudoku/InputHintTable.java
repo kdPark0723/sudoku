@@ -13,7 +13,9 @@ class InputHintTable {
     private TableLayout selectHintLayout;
     private FrameLayout backGround;
 
-    private List<ToggleButton> toggelButtons;
+    private List<ToggleButton> toggleButtons;
+
+    private CustomButton clickedButton;
 
     InputHintTable(SudokuTable sudokuTable, TableLayout selectHintLayout, FrameLayout backGround) {
         this.sudokuTable = sudokuTable;
@@ -21,26 +23,26 @@ class InputHintTable {
         this.selectHintLayout = selectHintLayout;
         this.backGround = backGround;
 
-        toggelButtons = new ArrayList<>();
+        toggleButtons = new ArrayList<>();
 
-        toggelButtons.clear();
+        toggleButtons.clear();
 
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_1));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_2));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_3));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_4));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_5));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_6));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_7));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_8));
-        toggelButtons.add(selectHintLayout.findViewById(R.id.hint_9));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_1));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_2));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_3));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_4));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_5));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_6));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_7));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_8));
+        toggleButtons.add(selectHintLayout.findViewById(R.id.hint_9));
 
         selectHintLayout.findViewById(R.id.hint_ok_button)
                 .setOnClickListener(this::selectHintLayoutOnClickOkButtonListener);
         selectHintLayout.findViewById(R.id.hint_cancel_button)
-                .setOnClickListener(this::selectHintLayoutOnClickDeleteButtonListener);
-        selectHintLayout.findViewById(R.id.hint_delete_button)
                 .setOnClickListener(this::selectHintLayoutOnClickCancelButtonListener);
+        selectHintLayout.findViewById(R.id.hint_delete_button)
+                .setOnClickListener(this::selectHintLayoutOnClickDeleteButtonListener);
     }
 
     void init() {
@@ -48,10 +50,15 @@ class InputHintTable {
     }
 
     private void selectHintLayoutOnClickOkButtonListener(View view) {
+        for (int i = 0; i < 9; i++)
+            clickedButton.setHint(i + 1, toggleButtons.get(i).isChecked());
+
         initSelect();
     }
 
     private void selectHintLayoutOnClickDeleteButtonListener(View view) {
+        clickedButton.unsetHints();
+
         initSelect();
     }
 
@@ -62,12 +69,19 @@ class InputHintTable {
     private void initSelect() {
         backGround.setVisibility(View.INVISIBLE);
         selectHintLayout.setVisibility(View.INVISIBLE);
-
-
     }
 
     void setVisibly(CustomButton clickedButton) {
         backGround.setVisibility(View.VISIBLE);
         selectHintLayout.setVisibility(View.VISIBLE);
+
+        this.clickedButton = clickedButton;
+
+        setCheckedButtons(clickedButton);
+    }
+
+    private void setCheckedButtons(CustomButton clickedButton) {
+        for (int i = 0; i < 9; i++)
+            toggleButtons.get(i).setChecked(clickedButton.isHintChecked(i + 1));
     }
 }

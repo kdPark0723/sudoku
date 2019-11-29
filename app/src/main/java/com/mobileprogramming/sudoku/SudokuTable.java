@@ -129,7 +129,7 @@ class SudokuTable {
 
     private boolean buttonOnLongClickListener(View view) {
         CustomButton clickedButton = (CustomButton) view;
-        if (clickedButton.isLock())
+        if (clickedButton.isLock() || clickedButton.get() != 0)
             return false;
 
         inputHintTable.setVisibly(clickedButton);
@@ -227,6 +227,7 @@ class SudokuTable {
                 }
 
                 get(i, j).initConflict();
+                get(i, j).unsetHints();
             }
         }
     }

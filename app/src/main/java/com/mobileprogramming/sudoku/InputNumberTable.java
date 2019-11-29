@@ -61,6 +61,8 @@ class InputNumberTable {
         onClickedButton.initConflict();
         sudokuTable.updateNumber(onClickedButton, preNumber);
 
+        onClickedButton.unsetHints();
+
         initSelect();
     }
 
