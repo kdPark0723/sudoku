@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class InputHintTable {
-    private SudokuTable sudokuTable;
     private TableLayout selectHintLayout;
     private FrameLayout backGround;
 
@@ -18,7 +17,6 @@ class InputHintTable {
     private CustomButton clickedButton;
 
     InputHintTable(SudokuTable sudokuTable, TableLayout selectHintLayout, FrameLayout backGround) {
-        this.sudokuTable = sudokuTable;
 
         this.selectHintLayout = selectHintLayout;
         this.backGround = backGround;
