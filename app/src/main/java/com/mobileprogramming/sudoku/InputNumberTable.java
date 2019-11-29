@@ -17,9 +17,7 @@ class InputNumberTable {
 
         this.selectNumberLayout = selectNumberLayout;
         this.backGround = backGround;
-    }
 
-    void init() {
         selectNumberLayout.findViewById(R.id.number_1)
                 .setOnClickListener(this::selectNumberLayoutOnClickNumberButtonListener);
         selectNumberLayout.findViewById(R.id.number_2)
@@ -43,7 +41,9 @@ class InputNumberTable {
                 .setOnClickListener(this::selectNumberLayoutOnClickDeleteButtonListener);
         selectNumberLayout.findViewById(R.id.cancel_button)
                 .setOnClickListener(this::selectNumberLayoutOnClickCancelButtonListener);
+    }
 
+    void init() {
         initSelect();
     }
 

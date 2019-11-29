@@ -50,21 +50,21 @@ class SudokuTable {
     private List<List<CustomButton>> buttons;
 
     private InputNumberTable inputNumberTable;
+    private InputHintTable inputHintTable;
 
-    SudokuTable(Context context, TableLayout sudokuTable, TableLayout selectNumberLayout, FrameLayout backGround) {
+
+    SudokuTable(Context context, TableLayout sudokuTable, TableLayout selectNumberLayout, TableLayout selectHintLayout, FrameLayout backGround) {
         this.context = context;
         this.sudokuTable = sudokuTable;
 
         inputNumberTable = new InputNumberTable(this, selectNumberLayout, backGround);
+        inputHintTable = new InputHintTable(this, selectHintLayout, backGround);
 
-        initView();
-    }
-
-    private void initView() {
         List<TableRow> tableRows = addTableRows(9);
         buttons = addButtons(tableRows);
 
         inputNumberTable.init();
+        inputHintTable.init();
     }
 
     private List<TableRow> addTableRows(int size) {
@@ -102,6 +102,7 @@ class SudokuTable {
                     button.setLayoutParams(buttonLayoutParams);
 
                 button.setOnClickListener(this::buttonOnClickListener);
+                button.setOnLongClickListener(this::buttonOnLongClickListener);
 
                 buttons.get(i).add(button);
                 tableRows.get(i).addView(buttons.get(i).get(j));
@@ -116,6 +117,24 @@ class SudokuTable {
         }
 
         return buttons;
+    }
+
+    private void buttonOnClickListener(View view) {
+        CustomButton clickedButton = (CustomButton) view;
+        if (clickedButton.isLock())
+            return;
+
+        inputNumberTable.setVisibly(clickedButton);
+    }
+
+    private boolean buttonOnLongClickListener(View view) {
+        CustomButton clickedButton = (CustomButton) view;
+        if (clickedButton.isLock())
+            return false;
+
+        inputHintTable.setVisibly(clickedButton);
+
+        return true;
     }
 
     void updateNumber(CustomButton button, int preNumber) {
@@ -172,14 +191,6 @@ class SudokuTable {
         }
     }
 
-    private void buttonOnClickListener(View view) {
-        CustomButton clickedButton = (CustomButton) view;
-        if (clickedButton.isLock())
-            return;
-
-        inputNumberTable.setVisibly(clickedButton);
-    }
-
     private boolean isSolve() {
         final int size = buttons.size();
 
@@ -193,6 +204,7 @@ class SudokuTable {
 
     void init() {
         inputNumberTable.init();
+        inputHintTable.init();
         initNumber();
     }
 

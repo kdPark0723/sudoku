@@ -20,9 +20,10 @@ public class MainActivity extends AppCompatActivity {
 
         TableLayout sudokuTable = findViewById(R.id.sudoku_table);
         TableLayout selectNumberLayout = findViewById(R.id.select_number);
+        TableLayout selectHintLayout = findViewById(R.id.select_hint);
         FrameLayout backGround = findViewById(R.id.back_ground);
 
-        table = new SudokuTable(this, sudokuTable, selectNumberLayout, backGround);
+        table = new SudokuTable(this, sudokuTable, selectNumberLayout, selectHintLayout, backGround);
         table.init();
 
         refreshButton = findViewById(R.id.refresh);
